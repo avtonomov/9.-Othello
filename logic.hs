@@ -39,8 +39,7 @@ printField f = putStr $ getStrField f 1
 			| i < count = show (take count field) ++ "\n" ++ getStrField (drop count field) (i+1)
 			| otherwise = show (take count field) ++ "\n"
 			
-
-
+-- поле - цвет ходящего - координаты хода
 moving :: Field -> State -> Position -> Field
 moving field state pos = move field state pos (checkPosition field state pos)
 
