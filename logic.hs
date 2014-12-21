@@ -47,3 +47,48 @@ f3 = setState f2 Black (4,5)
 f4 = setState f3 White (3,6)
 test = f4
 --getState (fieldFromIO startFieldIO) (0,0) 
+
+writeGameToFileIO :: Field -> FilePath -> IO ()
+writeGameToFileIO arr filename = writeFile filename $ unwords $ map show $ arr
+
+saveGame :: IORef GameState -> Window a -> Var(Maybe FilePath) -> IO ()
+saveGame ref win filePath = do
+	maybePath <- fileSaveDialog win True True "Сохранение игры..." [("Any file",["*.*"]),("Text",["*.txt"])] "" ""
+	print maybePath
+	case maybePath of
+		Nothing -> return ()
+		Just path -> do
+			varSet filePath $ Just path
+			st <- readIORef ref
+			let brd = board st
+			writeGameToFileIO brd path
+			
+loadGame :: IORef GameState -> Window a -> Var(Maybe FilePath) -> IO ()
+loadGame ref win filePath = do
+	maybePath <- fileOpenDialog win True True "Загрузка игры..." [("Any file",["*.*"]),("Text",["*.txt"])] "" ""
+	print maybePath
+	case maybePath of
+		Nothing -> return ()
+		Just path -> do
+		varSet filePath $ Just path
+		st <- readIORef ref
+		let btns = buttons st
+		brd' <- readGameFromFileIO path
+		updateBtns btns brd'
+		writeIORef ref (GameState brd' btns)
+		
+updateBtns :: [Button ()] -> Field -> IO ()
+updateBtns btns brd = do
+	let z = zip brd btns
+	forM_ z $ \p -> set (snd p) [text := (btnLabel (fst p)), bgcolor := getColor (toInt (fst p))]
+	
+readGameFromFileIO :: FilePath -> IO Field
+readGameFromFileIO filename = do
+	elems <- readFromFileIO filename
+	return elems
+	
+readFromFileIO :: FilePath -> IO [State]
+readFromFileIO filename = do
+	content <- readFile filename
+	let elems = concatMap words $ lines content
+	return $ map toState elems :: IO [State]
