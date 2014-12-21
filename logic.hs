@@ -112,7 +112,6 @@ btnLabel Black = "Black"
 btnLabel White = "White"
 btnLabel Empty = "Empty"
 
-	
 getColor 1 = red
 getColor 0 = white
 getColor -1 = blue
