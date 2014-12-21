@@ -19,7 +19,7 @@ fieldFromIO :: IO Field -> Field
 fieldFromIO = unsafePerformIO
 
 toInt :: State -> Int
-toInt Black = -1
+toInt Black = 2
 toInt White = 1
 toInt Empty = 0
 
