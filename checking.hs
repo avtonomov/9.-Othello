@@ -59,8 +59,8 @@ checkUpLeft field state pos = check field state False pos
 			| fst pos == 1 = (10,10) -- если находимся на верхней клетке
 			| snd pos == 1 = (10,10) -- если находимся на левой клетке
 			| getState field (fst pos - 1, snd pos - 1) == Empty = (20,10) -- если клетка слева сверху пуста
-			| getState field (fst pos - 1, snd pos - 1) == state = if (flag == False) then (10,10) else (fst pos - 1, snd pos - 1) -- если клетка слева сверху нашего цвета
-			| otherwise = check field state True (fst pos - 1, snd pos - 1) -- если клетка слева сверху не нашего цвета
+			| getState field (fst pos - 1, snd pos - 1) == state = if (flag == False) then (10,10) else (fst pos - 1, snd pos - 1) -- если клетка слева слева нашего цвета
+			| otherwise = check field state True (fst pos - 1, snd pos - 1) -- если клетка слева слева не нашего цвета
 
 checkDownRight :: Field -> State -> Position -> Position		
 checkDownRight field state pos = check field state False pos
@@ -69,9 +69,9 @@ checkDownRight field state pos = check field state False pos
 			| isValidPosition pos == False = (10,10)
 			| fst pos == count = (10,10) -- если находимся на нижней клетке
 			| snd pos == count = (10,10) -- если находимся на правой клетке
-			| getState field (fst pos + 1, snd pos + 1) == Empty = (10,10) -- если клетка справа сверху пуста
-			| getState field (fst pos + 1, snd pos + 1) == state = if (flag == False) then (10,10) else (fst pos + 1, snd pos + 1) -- если клетка справа сверху нашего цвета
-			| otherwise = check field state True (fst pos + 1, snd pos + 1) -- если клетка сверху не нашего цвета
+			| getState field (fst pos + 1, snd pos + 1) == Empty = (10,10) -- если клетка справа снизу пуста
+			| getState field (fst pos + 1, snd pos + 1) == state = if (flag == False) then (10,10) else (fst pos + 1, snd pos + 1) -- если клетка справа снизу нашего цвета
+			| otherwise = check field state True (fst pos + 1, snd pos + 1) -- если клетка справа снизу не нашего цвета
 
 
 checkDownLeft :: Field -> State -> Position -> Position		
@@ -81,6 +81,6 @@ checkDownLeft field state pos = check field state False pos
 			| isValidPosition pos == False = (10,10)
 			| fst pos == count = (10,10)-- если находимся на нижней клетке
 			| snd pos == 1 = (10,10) -- если находимся на левой клетке
-			| getState field (fst pos + 1, snd pos + 1) == Empty = (20,10) -- если клетка слева снизу пуста
-			| getState field (fst pos + 1, snd pos + 1) == state = if (flag == False) then (10,10) else (fst pos + 1, snd pos + 1) -- если клетка слева снизу нашего цвета
-			| otherwise = check field state True (fst pos + 1, snd pos + 1) -- если клетка слева снизу не нашего цвета
+			| getState field (fst pos + 1, snd pos - 1) == Empty = (20,10) -- если клетка слева снизу пуста
+			| getState field (fst pos + 1, snd pos - 1) == state = if (flag == False) then (10,10) else (fst pos + 1, snd pos - 1) -- если клетка слева снизу нашего цвета
+			| otherwise = check field state True (fst pos + 1, snd pos - 1) -- если клетка слева снизу не нашего цвета
