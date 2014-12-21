@@ -95,3 +95,19 @@ checkDownLeft field state pos = check field state False pos
 			| getState field (fst pos + 1, snd pos - 1) == Empty = (20,10) -- если клетка слева снизу пуста
 			| getState field (fst pos + 1, snd pos - 1) == state = if (flag == False) then (10,10) else (fst pos + 1, snd pos - 1) -- если клетка слева снизу нашего цвета
 			| otherwise = check field state True (fst pos + 1, snd pos - 1) -- если клетка слева снизу не нашего цвета
+			
+			
+checkPosition :: Field -> State -> Position -> FoundPositions
+checkPosition field state pos = check field state pos 1
+	where
+		check field state pos i
+			| i == 1 = if (isValidPosition (checkUp field state pos) == True) then ((checkUp field state pos), Up):check field state pos (i+1) else check field state pos (i+1)
+			| i == 2 = if (isValidPosition (checkDown field state pos) == True) then ((checkDown field state pos), Down):check field state pos (i+1) else check field state pos (i+1)
+			| i == 3 = if (isValidPosition (checkLeft field state pos) == True) then ((checkLeft field state pos), Left1):check field state pos (i+1) else check field state pos (i+1)
+			| i == 4 = if (isValidPosition (checkRight field state pos) == True) then ((checkRight field state pos), Right1):check field state pos (i+1) else check field state pos (i+1)
+			| i == 5 = if (isValidPosition (checkUpRight field state pos) == True) then ((checkUpRight field state pos), UpRight):check field state pos (i+1) else check field state pos (i+1)
+			| i == 6 = if (isValidPosition (checkUpLeft field state pos) == True) then ((checkUpLeft field state pos), UpLeft):check field state pos (i+1) else check field state pos (i+1)
+			| i == 7 = if (isValidPosition (checkDownRight field state pos) == True) then ((checkDownRight field state pos), DownRight):check field state pos (i+1) else check field state pos (i+1)
+			| i == 8 = if (isValidPosition (checkDownLeft field state pos) == True) then ((checkDownLeft field state pos), DownLeft):check field state pos (i+1) else check field state pos (i+1)
+			| otherwise = []
+			

@@ -39,14 +39,13 @@ printField f = putStr $ getStrField f 1
 			| i < count = show (take count field) ++ "\n" ++ getStrField (drop count field) (i+1)
 			| otherwise = show (take count field) ++ "\n"
 			
-f2 = setState startField White (4,4)
-f3 = setState f2 Black (4,3)
-f4 = setState f3 Black (3,4)
-f5 = setState f4 Black (3,5)
-f6 = setState f5 Black (3,6)
-f7 = setState f6 White (3,7)
 
-test = f7
+			
+f1 = setState startField Black (4,4)
+f2 = setState f1 White (3,4)
+f3 = setState f2 Black (4,5)
+f4 = setState f3 White (3,6)
+test = f4
 --getState (fieldFromIO startFieldIO) (0,0) 
 
 
