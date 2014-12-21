@@ -50,7 +50,9 @@ f4 = setState f3 White (5,5)
 
 startGame = fieldToIO f4
 
-intToPair k = ((k `div` count) + 1, (k `mod` count) + 1)
+intToPair k
+	| (k `mod` count) == 0 = ((k `div` count), count)
+	| otherwise = ((k `div` count) + 1, (k `mod` count))
 
 nextStep :: IO Field -> State -> Int -> IO Field
 nextStep field state k = fieldToIO $ moving (fieldFromIO field) state $ intToPair k
