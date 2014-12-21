@@ -110,4 +110,22 @@ checkPosition field state pos = check field state pos 1
 			| i == 7 = if (isValidPosition (checkDownRight field state pos) == True) then ((checkDownRight field state pos), DownRight):check field state pos (i+1) else check field state pos (i+1)
 			| i == 8 = if (isValidPosition (checkDownLeft field state pos) == True) then ((checkDownLeft field state pos), DownLeft):check field state pos (i+1) else check field state pos (i+1)
 			| otherwise = []
-			
+
+directionMove :: Field -> State -> Position -> (Position, Direction) -> Field
+directionMove field state pos finish_pos
+	| snd finish_pos == Up = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos - 1, snd pos)) state (fst pos - 1, snd pos) finish_pos else field
+	| snd finish_pos == Down = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos + 1, snd pos)) state (fst pos + 1, snd pos) finish_pos else field
+	| snd finish_pos == Right1 = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos, snd pos + 1)) state (fst pos, snd pos + 1) finish_pos else field
+	| snd finish_pos == Left1 = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos, snd pos - 1)) state (fst pos, snd pos - 1) finish_pos else field
+	| snd finish_pos == UpRight = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos - 1, snd pos + 1)) state (fst pos - 1, snd pos + 1) finish_pos else field
+	| snd finish_pos == UpLeft = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos - 1, snd pos - 1)) state (fst pos - 1, snd pos - 1) finish_pos else field
+	| snd finish_pos == DownLeft = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos + 1, snd pos + 1)) state (fst pos + 1, snd pos + 1) finish_pos else field
+	| snd finish_pos == DownRight = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos + 1, snd pos + 1)) state (fst pos + 1, snd pos + 1) finish_pos else field
+	| otherwise = field
+
+
+move :: Field -> State -> Position -> FoundPositions -> Field
+move field _ _ [] = field
+move field state pos (x:xs) = move (directionMove (setState field state pos) state pos x) state pos xs
+
+
