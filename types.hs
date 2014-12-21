@@ -10,7 +10,7 @@ data State = Black | White | Empty
 data Direction = Up | Down | Left1 | Right1 | UpLeft | UpRight | DownLeft | DownRight
 	deriving (Show, Eq)
 	
-data FoundPositions = [(Position, Direction)]
+type FoundPositions = [(Position, Direction)]
 
 count :: Int
 count = 8
