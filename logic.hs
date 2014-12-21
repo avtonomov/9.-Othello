@@ -53,7 +53,7 @@ startGame = fieldToIO f4
 intToPair k = ((k `div` count) + 1, (k `mod` count) + 1)
 
 nextStep :: IO Field -> State -> Int -> IO Field
-nextStep field state k = moving (fieldFromIO field) White $ intToPair k
+nextStep field state k = fieldToIO $ moving (fieldFromIO field) White $ intToPair k
 
 {-
 writeGameToFileIO :: Field -> FilePath -> IO ()
