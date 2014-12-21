@@ -40,7 +40,10 @@ printField f = putStr $ getStrField f 1
 			| otherwise = show (take count field) ++ "\n"
 			
 
-			
+
+moving :: Field -> State -> Position -> Field
+moving field state pos = move field state pos (checkPosition field state pos)
+
 f1 = setState startField Black (4,4)
 f2 = setState f1 White (3,4)
 f3 = setState f2 Black (4,5)
