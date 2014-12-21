@@ -31,8 +31,11 @@ main
 hello :: IO ()
 hello = do
 	let wndTitle = "Game"
-	wnd <- frame [ text := wndTitle, bgcolor := blue ]
+	wnd <- frame [ text := wndTitle, bgcolor := grey ]
 	
 	brd <- startField
 	btns <- getBtns wnd brd
+	
+	placeBtns wnd btns
+	
 	return()
