@@ -5,6 +5,8 @@ import Data.Array.IArray
 import Data.List.Split
 import Data.Maybe
 import Logic
+import Checking
+import Types
 import Data.IORef
 import Control.Monad as Monad 
 
@@ -12,8 +14,12 @@ fPath :: String
 fPath = "save.txt"
 
 
-getBtns :: Window a -> Field -> IO ([Button ()])
-getBtns wnd brd = sequence $ map (\x -> button wnd [text := (btnLabel x), clientSize := sz 30 30, bgcolor := getColor (toInt x), on command := setField wnd 1]) brd
+
+
+--getBtns :: Window a -> Field -> IO ([Button ()])
+--getBtns wnd brd = sequence $ map (\x -> button wnd [text := (btnLabel x), clientSize := sz 30 30, bgcolor := getColor (toInt x), on command := setField wnd 1]) brd
+getBtns wnd [] i btns = btns
+getBtns wnd (x:brd) i btns = getBtns wnd brd (i + 1) (button wnd [text := (show i), clientSize := sz 30 30, bgcolor := getColor (toInt x), on click := setField wnd i]:btns)
 
 -- прикрепляет кнопки к окну
 placeBtns :: (Form f, Widget w) => f -> [w] -> IO ()
@@ -29,8 +35,8 @@ hello = do
 	wnd <- frame [ text := wndTitle, bgcolor := grey ]
 	let say desc = infoDialog wnd wndTitle desc
 	
-	brd <- startField
-	btns <- getBtns wnd brd
+	brd <- startFieldIO
+	btns <- sequence $ getBtns wnd brd 0 []
 	placeBtns wnd btns
 	
 	
@@ -38,21 +44,26 @@ hello = do
 	ref <- newIORef st
 	
 	filePath <- varCreate Nothing
-	saveGame ref wnd filePath
+	--saveGame ref wnd filePath
 	
 	loadGame ref wnd filePath
 	return()
 	
 setField :: Window a -> Int -> IO()
 setField wnd k = do
-	brd <- startField
-	btns <- getBtns wnd brd
+	brd <- startFieldIO
+	btns <- sequence $ getBtns wnd brd 0 []
+	--placeBtns wnd btns
+	
 	let st = GameState brd btns
 	ref <- newIORef st
+	
+	--nextStep k
+	
 	filePath <- varCreate Nothing
 	loadGame ref wnd filePath
 	
-	saveGame ref wnd filePath
+	--saveGame ref wnd filePath
 	return()
 	
 loadGame :: IORef GameState -> Window a -> Var(Maybe FilePath) -> IO ()
@@ -86,7 +97,7 @@ saveGame ref win filePath = do
 			let brd = board st
 			writeGameToFileIO brd path
 
-			data GameState = GameState {
+data GameState = GameState {
 	board :: Field,
 	buttons :: [Button ()]
 }
