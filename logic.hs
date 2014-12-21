@@ -4,11 +4,14 @@ import Data.List
 
 type Field = [State]
 
+<<<<<<< HEAD
 type Position = (Int, Int)
 
 data Direction = Up | Down | Left | Right | UpLeft | UpRight | DownLeft | DownRight
 	deriving (Show)
 
+=======
+>>>>>>> 4c5e7cd1283814f49c8406b0879a202953448857
 data State = Black | White | Empty
 	deriving (Show, Eq)
 
@@ -18,6 +21,7 @@ count = 8
 startField :: IO Field
 startField = return $ replicate (count * count) Empty
 
+<<<<<<< HEAD
 getState :: IO Field -> Position -> IO State
 getState field pos = field !! (fst pos * count + snd pos)
 
@@ -32,10 +36,18 @@ countWhite field = foldl (\s x -> if x == White then s+1 else s ) 0 field
 
 countEmpty :: Field -> Int
 countEmpty field = foldl (\s x -> if x == Empty then s+1 else s ) 0 field 
+=======
+getState :: Field -> Int -> Int -> State
+getState field i j = field !! (i * count + j)
+
+setState :: Field -> State -> Int -> Int -> Field
+setState field state i j = take (i * count + j) field ++ [state] ++ drop (i * count + j + 1) field
+>>>>>>> 4c5e7cd1283814f49c8406b0879a202953448857
 
 toInt :: State -> Int
 toInt Black = -1
 toInt White = 1
+<<<<<<< HEAD
 toInt Empty = 0
 
 printField :: Field -> IO ()
@@ -63,3 +75,6 @@ f4 = setState f3 Black (3,4)
 
 test = printField f4
 -}
+=======
+toInt Empty = 0
+>>>>>>> 4c5e7cd1283814f49c8406b0879a202953448857
