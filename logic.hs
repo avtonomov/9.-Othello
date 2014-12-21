@@ -75,13 +75,3 @@ toState :: String -> State
 toState "Black" = Black
 toState "White" = White
 toState "Empty" = Empty
-
-btnLabel :: State -> String
-btnLabel Black = "Black"
-btnLabel White = "White"
-btnLabel Empty = "Empty"
-
-
-
-
-
