@@ -12,16 +12,6 @@ fPath :: String
 fPath = "save.txt"
 
 
-data GameState = GameState {
-	board :: Field,
-	buttons :: [Button ()]
-}
-
-btnLabel :: State -> String
-btnLabel Black = "Black"
-btnLabel White = "White"
-btnLabel Empty = "Empty"
-
 getBtns :: Window a -> Field -> IO ([Button ()])
 getBtns wnd brd = sequence $ map (\x -> button wnd [text := (btnLabel x), clientSize := sz 30 30, bgcolor := getColor (toInt x), on command := setField wnd 1]) brd
 
@@ -53,15 +43,6 @@ hello = do
 	loadGame ref wnd filePath
 	return()
 	
-getColor 1 = red
-getColor 0 = white
-getColor -1 = blue
-	
-toState :: String -> State
-toState "Black" = Black
-toState "White" = White
-toState "Empty" = Empty
-
 setField :: Window a -> Int -> IO()
 setField wnd k = do
 	brd <- startField

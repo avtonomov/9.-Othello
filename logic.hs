@@ -4,6 +4,13 @@ import Data.List
 import System.IO.Unsafe
 import Checking
 import Types
+import Graphics.UI.WXCore
+import Graphics.UI.WX
+import Data.Array.IArray
+import Data.List.Split
+import Data.Maybe
+import Data.IORef
+import Control.Monad as Monad 
 
 startField :: Field
 startField = replicate (count * count) Empty
@@ -94,3 +101,24 @@ readFromFileIO filename = do
 	content <- readFile filename
 	let elems = concatMap words $ lines content
 	return $ map toState elems :: IO [State]
+	
+data GameState = GameState {
+	board :: Field,
+	buttons :: [Button ()]
+}
+
+btnLabel :: State -> String
+btnLabel Black = "Black"
+btnLabel White = "White"
+btnLabel Empty = "Empty"
+
+	
+getColor 1 = red
+getColor 0 = white
+getColor -1 = blue
+
+toState :: String -> State
+toState "Black" = Black
+toState "White" = White
+toState "Empty" = Empty
+
