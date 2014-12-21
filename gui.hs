@@ -4,10 +4,25 @@ import Graphics.UI.WX
 import Data.Array.IArray
 import Data.List.Split
 import Data.Maybe
-import PuzzleLogic
+import Logic
 import Data.IORef
 import Control.Monad as Monad 
 
+
+data GameState = GameState {
+	board :: Field,
+	buttons :: [Button ()]
+}
+
+btnLabel :: Int -> String
+btnLabel x = if (x > 64) then "" else (show x)
+
+getBtns :: Window a -> Field -> IO ([Button ()])
+getBtns wnd brd = sequence $ map (\x -> button wnd [text := (btnLabel $ (toInt x)), clientSize := sz 30 30]) brd
+
+-- прикрепляет кнопки к окну
+placeBtns :: (Form f, Widget w) => f -> [w] -> IO ()
+placeBtns wnd btns = set wnd [layout := minsize (sz 500 500) $column 8 $ map (\x -> margin 3 $ row 8 (map widget x)) (chunksOf 8 btns)]
 
 main :: IO ()
 main
@@ -17,27 +32,7 @@ hello :: IO ()
 hello = do
 	let wndTitle = "Game"
 	wnd <- frame [ text := wndTitle, bgcolor := blue ]
-	brd <- generateGameIO
+	
+	brd <- startField
 	btns <- getBtns wnd brd
-	placeBtns wnd btns
-	
-	let st = GameState brd btns
-	ref <- newIORef st
-	
-  {--
-  = do f    <- frame    [text := "Hello!"]
-       quit <- button f [text := "Quit", on command := close f]
-       set f [layout := margin 10 (column 5 [floatCentre (label "Hello")
-                                     ,floatCentre (widget quit)
-                                     ] )]
---}
-data GameState = GameState {
-	board :: Board,
-	buttons :: [Button ()]
-}
-
-btnLabel :: Integer -> String
-btnLabel x = if (x > 64) then "" else (show x)
-									 
-getBtns :: Window a -> Board -> IO ([Button ()])
-getBtns wnd brd = sequence $ map (\x -> button wnd [text := (btnLabel x), clientSize := sz 50 50]) (elems brd)
+	return()
