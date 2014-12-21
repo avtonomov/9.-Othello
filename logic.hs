@@ -1,6 +1,7 @@
 module Logic where
 
 import Data.List
+import System.IO.Unsafe
 
 type Field = [State]
 
@@ -15,14 +16,24 @@ data State = Black | White | Empty
 count :: Int
 count = 8
 
-startField :: IO Field
-startField = return $ replicate (count * count) Empty
+startField :: Field
+startField = replicate (count * count) Empty
 
-getState :: IO Field -> Position -> IO State
-getState field pos = field !! (fst pos * count + snd pos)
+startFieldIO :: IO Field
+startFieldIO = return $ replicate (count * count) Empty
+
+fieldToIO :: Field -> IO Field
+fieldToIO = return
+
+--знаю, что unsafe, но что поделать...
+fieldFromIO :: IO Field -> Field
+fieldFromIO = unsafePerformIO
+
+getState :: Field -> Position -> State
+getState field pos = field !! ((fst pos - 1) * count + (snd pos - 1))
 
 setState :: Field -> State -> Position -> Field
-setState field state pos = take (fst pos * count + snd pos) field ++ [state] ++ drop (fst pos * count + snd pos + 1) field
+setState field state pos = take ((fst pos - 1) * count + (snd pos - 1)) field ++ [state] ++ drop ((fst pos - 1) * count + snd pos) field
 
 countBlack :: Field -> Int
 countBlack field = foldl (\s x -> if x == Black then s+1 else s ) 0 field 
@@ -38,28 +49,22 @@ toInt Black = -1
 toInt White = 1
 toInt Empty = 0
 
+isValidPosition :: Position -> Bool
+isValidPosition pos = if fst pos > 0 && fst pos <= count && snd pos > 0 && snd pos <= count then True else False
+
 printField :: Field -> IO ()
 printField f = putStr $ getStrField f 1
 	where
 		getStrField field i
 			| i < count = show (take count field) ++ "\n" ++ getStrField (drop count field) (i+1)
 			| otherwise = show (take count field) ++ "\n"
-
---проверяем возможность хода на позиции i j
--- state - цвет ходящего
---checkMove :: Field -> State -> Int -> Int
-
-checkUp :: Field -> State -> Bool -> Position -> (Bool, Position)
-checkUp field state flag pos
-	| fst pos < 2 = (False, (15,10)) -- если находимся на верхней клетке или на второй сверху
-	| getState field (fst pos - 1, snd pos) == Empty = (False, (20,10)) -- если клетка сверху пуста
-	| getState field (fst pos - 1, snd pos) == state = if (flag == False) then (False, (10,10)) else (True, (fst pos - 1, snd pos)) -- если клетка сверху нашего цвета
-	| otherwise = checkUp field state True ((fst pos - 1, snd pos)) -- если клетка сверху не нашего цвета
-{-
-f1 = setState startField White (3,3)
-f2 = setState f1 White (4,4)
+			
+f2 = setState startField White (4,4)
 f3 = setState f2 Black (4,3)
 f4 = setState f3 Black (3,4)
+f5 = setState f4 Black (3,5)
+f6 = setState f5 Black (3,6)
+f7 = setState f6 White (3,7)
 
-test = printField f4
--}
+test = f7
+--getState (fieldFromIO startFieldIO) (0,0) 
