@@ -41,7 +41,7 @@ printField f = putStr $ getStrField f 1
 
 -- поле - цвет ходящего - координаты хода
 moving :: Field -> State -> Position -> Field
-moving field state pos = if (state == Empty) then move field state pos (checkPosition field state pos) else field
+moving field state pos = move field state pos (checkPosition field state pos)
 
 f1 = setState startField Black (4,5)
 f2 = setState f1 White (4,4)
@@ -53,7 +53,8 @@ startGame = fieldToIO f4
 intToPair k = ((k `div` count) + 1, (k `mod` count) + 1)
 
 nextStep :: IO Field -> State -> Int -> IO Field
-nextStep field state k = fieldToIO $ moving (fieldFromIO field) White $ intToPair k
+nextStep field state k = fieldToIO $ moving (fieldFromIO field) state $ intToPair k
+
 
 {-
 writeGameToFileIO :: Field -> FilePath -> IO ()
