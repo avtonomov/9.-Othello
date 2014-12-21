@@ -53,6 +53,45 @@ setField wnd k = do
 	loadGame ref wnd filePath
 	
 	saveGame ref wnd filePath
-	
-	
 	return()
+	
+loadGame :: IORef GameState -> Window a -> Var(Maybe FilePath) -> IO ()
+loadGame ref win filePath = do
+	maybePath <- fileOpenDialog win True True "Загрузка игры..." [("Any file",["*.*"]),("Text",["*.txt"])] "" ""
+	print maybePath
+	case maybePath of
+		Nothing -> return ()
+		Just path -> do
+		varSet filePath $ Just path
+		st <- readIORef ref
+		let btns = buttons st
+		brd' <- readGameFromFileIO path
+		updateBtns btns brd'
+		writeIORef ref (GameState brd' btns)
+		
+updateBtns :: [Button ()] -> Field -> IO ()
+updateBtns btns brd = do
+	let z = zip brd btns
+	forM_ z $ \p -> set (snd p) [text := (btnLabel (fst p)), bgcolor := getColor (toInt (fst p))]
+	
+saveGame :: IORef GameState -> Window a -> Var(Maybe FilePath) -> IO ()
+saveGame ref win filePath = do
+	maybePath <- fileSaveDialog win True True "Сохранение игры..." [("Any file",["*.*"]),("Text",["*.txt"])] "" ""
+	print maybePath
+	case maybePath of
+		Nothing -> return ()
+		Just path -> do
+			varSet filePath $ Just path
+			st <- readIORef ref
+			let brd = board st
+			writeGameToFileIO brd path
+
+			data GameState = GameState {
+	board :: Field,
+	buttons :: [Button ()]
+}
+
+	
+getColor 1 = red
+getColor 0 = white
+getColor -1 = blue
