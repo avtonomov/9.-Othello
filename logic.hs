@@ -48,7 +48,7 @@ f2 = setState f1 White (4,4)
 f3 = setState f2 Black (5,4)
 f4 = setState f3 White (5,5)
 
-start = f4
+startGame = f4
 
 writeGameToFileIO :: Field -> FilePath -> IO ()
 writeGameToFileIO arr filename = writeFile filename $ unwords $ map show $ arr
