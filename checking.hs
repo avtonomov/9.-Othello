@@ -129,7 +129,4 @@ move field _ _ [] = field
 move field state pos (x:xs) = move (directionMove (setState field state pos) state pos x) state pos xs
 
 
-moving :: Field -> State -> Position -> Field
-moving field state pos = move field state pos (checkPosition field state pos)
-
 
