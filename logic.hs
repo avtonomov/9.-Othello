@@ -44,11 +44,11 @@ printField f = putStr $ getStrField f 1
 moving :: Field -> State -> Position -> Field
 moving field state pos = move field state pos (checkPosition field state pos)
 
-f1 = setState startField Black (4,4)
-f2 = setState f1 White (3,4)
-f3 = setState f2 Black (4,5)
-f4 = setState f3 White (3,6)
-test = f4
---getState (fieldFromIO startFieldIO) (0,0) 
+f1 = setState startField Black (4,5)
+f2 = setState f1 White (4,4)
+f3 = setState f2 Black (5,4)
+f4 = setState f3 White (5,5)
+
+start = f4
 
 
