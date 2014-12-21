@@ -48,18 +48,17 @@ f2 = setState f1 White (4,4)
 f3 = setState f2 Black (5,4)
 f4 = setState f3 White (5,5)
 
-fPath :: String
-fPath = "save.txt"
-
 startGame = fieldToIO f4
-
-writeGameToFileIO :: Field -> FilePath -> IO ()
-writeGameToFileIO arr filename = writeFile filename $ unwords $ map show $ arr
 
 intToPair k = ((k `div` count) + 1, (k `mod` count) + 1)
 
-nextStep k = fieldToIO $ moving (fieldFromIO (readGameFromFileIO fPath)) White $ intToPair k
-	
+nextStep :: IO Field -> State -> Int -> IO Field
+nextStep field state k = moving (fieldFromIO field) White $ intToPair k
+
+{-
+writeGameToFileIO :: Field -> FilePath -> IO ()
+writeGameToFileIO arr filename = writeFile filename $ unwords $ map show $ arr
+
 readGameFromFileIO :: FilePath -> IO Field
 readGameFromFileIO filename = do
 	elems <- readFromFileIO filename
@@ -75,3 +74,4 @@ toState :: String -> State
 toState "Black" = Black
 toState "White" = White
 toState "Empty" = Empty
+-}
