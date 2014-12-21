@@ -1,4 +1,15 @@
-import Logic
+module Checking where
+
+import Types
+
+getState :: Field -> Position -> State
+getState field pos = field !! ((fst pos - 1) * count + (snd pos - 1))
+
+setState :: Field -> State -> Position -> Field
+setState field state pos = take ((fst pos - 1) * count + (snd pos - 1)) field ++ [state] ++ drop ((fst pos - 1) * count + snd pos) field
+
+isValidPosition :: Position -> Bool
+isValidPosition pos = if fst pos > 0 && fst pos <= count && snd pos > 0 && snd pos <= count then True else False
 
 checkUp :: Field -> State -> Position -> Position
 checkUp field state pos = check field state False pos

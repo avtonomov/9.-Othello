@@ -2,19 +2,8 @@ module Logic where
 
 import Data.List
 import System.IO.Unsafe
-
-type Field = [State]
-
-type Position = (Int, Int)
-
-data Direction = Up | Down | Left | Right | UpLeft | UpRight | DownLeft | DownRight
-	deriving (Show)
-
-data State = Black | White | Empty
-	deriving (Show, Eq)
-
-count :: Int
-count = 8
+import Checking
+import Types
 
 startField :: Field
 startField = replicate (count * count) Empty
@@ -29,11 +18,10 @@ fieldToIO = return
 fieldFromIO :: IO Field -> Field
 fieldFromIO = unsafePerformIO
 
-getState :: Field -> Position -> State
-getState field pos = field !! ((fst pos - 1) * count + (snd pos - 1))
-
-setState :: Field -> State -> Position -> Field
-setState field state pos = take ((fst pos - 1) * count + (snd pos - 1)) field ++ [state] ++ drop ((fst pos - 1) * count + snd pos) field
+toInt :: State -> Int
+toInt Black = -1
+toInt White = 1
+toInt Empty = 0
 
 countBlack :: Field -> Int
 countBlack field = foldl (\s x -> if x == Black then s+1 else s ) 0 field 
@@ -43,14 +31,6 @@ countWhite field = foldl (\s x -> if x == White then s+1 else s ) 0 field
 
 countEmpty :: Field -> Int
 countEmpty field = foldl (\s x -> if x == Empty then s+1 else s ) 0 field 
-
-toInt :: State -> Int
-toInt Black = -1
-toInt White = 1
-toInt Empty = 0
-
-isValidPosition :: Position -> Bool
-isValidPosition pos = if fst pos > 0 && fst pos <= count && snd pos > 0 && snd pos <= count then True else False
 
 printField :: Field -> IO ()
 printField f = putStr $ getStrField f 1
@@ -68,3 +48,5 @@ f7 = setState f6 White (3,7)
 
 test = f7
 --getState (fieldFromIO startFieldIO) (0,0) 
+
+
