@@ -41,7 +41,7 @@ printField f = putStr $ getStrField f 1
 
 -- поле - цвет ходящего - координаты хода
 moving :: Field -> State -> Position -> Field
-moving field state pos = move field state pos (checkPosition field state pos)
+moving field state pos = if (getState field pos == Empty) then move field state pos (checkPosition field state pos) else field
 
 f1 = setState startField Black (4,5)
 f2 = setState f1 White (4,4)
