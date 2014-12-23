@@ -93,12 +93,12 @@ isMoved field state k
 	| otherwise = True
 
 isEndGame :: IO Field -> Bool
-isEndGame field = (isEnd field Empty 0)
+isEndGame field = (isEnd (fieldFromIO field) 0)
 	where
-		isEnd field state k
+		isEnd field k
 			| k == count * count - 1 = True
-			| length (checkPosition (fieldFromIO field) state (intToPair k)) > 0 = False
-			| otherwise = isEnd field state (k+1)
+			| length (checkPosition field (getState field (intToPair k)) (intToPair k)) > 0 = False
+			| otherwise = isEnd field (k+1)
 
 winner :: IO Field -> State
 winner field 
