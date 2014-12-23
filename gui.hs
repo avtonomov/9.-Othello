@@ -33,12 +33,7 @@ setCommand_up btns ref = do
 	forM_ z $ \p -> update_button (snd p) (isMoved brd plr (fst p))
 
 
-can_move btns ref xs = do
-	st <- readIORef ref
-	let brd = board st
-	let plr = player st
-	let z = zip [1..64] btns
-	forM_ z $ \p -> if isMoved brd plr (fst p)==True then (1:xs)
+
 	
 update_button p True = do
 	set p [bgcolor := green]
@@ -91,17 +86,22 @@ setField wnd k ref = do
 	let brd = board st
 	let plr = player st
 	let brd' = nextStep brd plr k
-	end_game brd' say
+	end_game plr k brd' say st
 	updateBtns btns (fieldFromIO brd')
 	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
 	setCommand_up btns ref
 	return()
 
-end_game brd say
-	|isEndGame brd ==True && winner brd == Black = say "Black power" 
-	|isEndGame brd ==True && winner brd == White = say "White power" 
-	|isEndGame brd ==True && winner brd == Empty = say "Nothing power" 
+end_game plr k brd say st
+	|(isEndGameByJamik plr k brd st) ==True && winner brd == Black = say "Black power" 
+	|(isEndGameByJamik plr k brd st) ==True && winner brd == White = say "White power" 
+	|(isEndGameByJamik plr k brd st) ==True && winner brd == Empty = say "Nothing power" 
 	|otherwise =  return()
+
+isEndGameByJamik plr k brd [] = False
+isEndGameByJamik plr k brd (st:state) 
+	| isMoved brd plr k == True = True
+	| otherwise = isEndGameByJamik plr (k + 1) brd state
 
 updateBtns :: [Button ()] -> Field -> IO ()
 updateBtns btns brd = do
