@@ -38,8 +38,7 @@ can_move btns ref xs = do
 	let brd = board st
 	let plr = player st
 	let z = zip [1..64] btns
-	let temp = 0
-	forM_ z $ \p -> if isMoved brd plr (fst p)==True then 1:xs
+	forM_ z $ \p -> if isMoved brd plr (fst p)==True then (1:xs)
 	
 update_button p True = do
 	set p [bgcolor := green]
