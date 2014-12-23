@@ -66,8 +66,7 @@ hello = do
 	menuItem top_Menu [on command := new_game ref, text := "Новая игра"]
 	menuQuit top_Menu [on command := wxcAppExit, text := "Выход"]
 
-
-	let winPopup = say "Победа!"   
+  
 	
 	set wnd [menuBar := [top_Menu]]
 
@@ -94,7 +93,7 @@ end_game brd say
 	|isEndGame brd ==True && winner brd == Black = say "Black power" 
 	|isEndGame brd ==True && winner brd == White = say "White power" 
 	|isEndGame brd ==True && winner brd == Empty = say "Nothing power" 
-	|otherwise = return()
+	|otherwise =  say "Black power"
 
 updateBtns :: [Button ()] -> Field -> IO ()
 updateBtns btns brd = do
