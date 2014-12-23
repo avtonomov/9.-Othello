@@ -119,7 +119,7 @@ directionMove field state pos finish_pos
 	| snd finish_pos == Left1 = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos, snd pos - 1)) state (fst pos, snd pos - 1) finish_pos else field
 	| snd finish_pos == UpRight = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos - 1, snd pos + 1)) state (fst pos - 1, snd pos + 1) finish_pos else field
 	| snd finish_pos == UpLeft = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos - 1, snd pos - 1)) state (fst pos - 1, snd pos - 1) finish_pos else field
-	| snd finish_pos == DownLeft = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos + 1, snd pos + 1)) state (fst pos + 1, snd pos + 1) finish_pos else field
+	| snd finish_pos == DownLeft = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos + 1, snd pos - 1)) state (fst pos + 1, snd pos - 1) finish_pos else field
 	| snd finish_pos == DownRight = if (pos /= fst finish_pos) then directionMove (setState field state (fst pos + 1, snd pos + 1)) state (fst pos + 1, snd pos + 1) finish_pos else field
 	| otherwise = field
 
