@@ -48,8 +48,9 @@ new_game ref = do
 	st <- readIORef ref
 	let btns = buttons st
 	let brd' = startGame
-	updateBtns btns fieldFromIO brd')
+	updateBtns btns (fieldFromIO brd')
 	writeIORef ref (GameState brd' btns White)
+	setCommand_up btns wnd ref
 
 hello :: IO ()
 hello = do
@@ -65,6 +66,7 @@ hello = do
 	menuItem top_Menu [on command := new_game ref, text := "Новая игра"]
 	menuQuit top_Menu [on command := wxcAppExit, text := "Выход"]
 
+	set wnd [menuBar := [topLevelMenu]]
 	setCommand btns wnd ref
 	placeBtns wnd btns
 	setCommand_up btns wnd ref
