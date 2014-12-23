@@ -25,7 +25,7 @@ setCommand btns wnd ref = do
 	let z = zip [1..64] btns
 	forM_ z $ \p -> set (snd p) [on command := setField wnd (fst p) ref]
 
-setCommand_up btns wnd ref = do
+setCommand_up btns ref = do
 	st <- readIORef ref
 	let brd = board st
 	let plr = player st
@@ -50,7 +50,7 @@ new_game ref = do
 	let brd' = startGame
 	updateBtns btns (fieldFromIO brd')
 	writeIORef ref (GameState brd' btns White)
-	setCommand_up btns wnd ref
+	setCommand_up btns ref
 
 hello :: IO ()
 hello = do
@@ -65,24 +65,36 @@ hello = do
 	top_Menu <- menuPane [text := "Игра"]
 	menuItem top_Menu [on command := new_game ref, text := "Новая игра"]
 	menuQuit top_Menu [on command := wxcAppExit, text := "Выход"]
+
+
+	let winPopup = say "Победа!"   
 	
-	set wnd [menuBar := [topLevelMenu]]
+	set wnd [menuBar := [top_Menu]]
 
 	setCommand btns wnd ref
 	placeBtns wnd btns
-	setCommand_up btns wnd ref
+	setCommand_up btns ref
 	return()
 	
 setField wnd k ref = do
+	let wndTitle = "Game"
+	let say desc = infoDialog wnd wndTitle desc
 	st <- readIORef ref
 	let btns = buttons st
 	let brd = board st
 	let plr = player st
 	let brd' = nextStep brd plr k
+	end_game brd say
 	updateBtns btns (fieldFromIO brd')
 	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
-	setCommand_up btns wnd ref
+	setCommand_up btns ref
 	return()
+
+end_game brd say
+	|isEndGame brd ==True && winner brd == Black = say "Black power" 
+	|isEndGame brd ==True && winner brd == White = say "White power" 
+	|isEndGame brd ==True && winner brd == Empty = say "Nothing power" 
+	|otherwise = return()
 
 updateBtns :: [Button ()] -> Field -> IO ()
 updateBtns btns brd = do
