@@ -43,12 +43,14 @@ printField f = putStr $ getStrField f 1
 moving :: Field -> State -> Position -> Field
 moving field state pos = if (getState field pos == Empty) then move field state pos (checkPosition field state pos) else field
 
-f1 = setState startField Black (4,5)
+f1 = setState startField White (4,5)
 f2 = setState f1 White (4,4)
 f3 = setState f2 Black (5,4)
 f4 = setState f3 White (5,5)
 
 startGame = fieldToIO f4
+
+test = f4
 
 intToPair k
 	| (k `mod` count) == 0 = ((k `div` count), count)
