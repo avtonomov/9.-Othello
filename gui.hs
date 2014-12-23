@@ -30,11 +30,12 @@ setCommand_up btns wnd ref = do
 	let brd = board st
 	let plr = player st
 	let z = zip [1..64] btns
-	forM_ z $ \p -> set (snd p) [bgcolor := check_move brd (fst p) plr]
+	forM_ z $ \p -> update_button (snd p) (isMoved brd plr (fst p))
 
-check_move brd k plr 
-	|isMoved brd plr k ==True = green
-	|otherwise = getColor plr 
+update_button p True = do
+	set p [bgcolor := green]
+	update_button p False = do
+	return() 
 
 main :: IO ()
 main
