@@ -76,5 +76,9 @@ btnLabel Black = "Black"
 btnLabel White = "White"
 btnLabel Empty = "Empty"
 
-toglePlayer Black = White
-toglePlayer White = Black
+
+toglePlayer::State -> Bool -> State
+toglePlayer Black True = White
+toglePlayer White True = Black
+toglePlayer Black False = Black
+toglePlayer White False = White
