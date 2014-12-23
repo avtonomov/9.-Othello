@@ -34,7 +34,8 @@ setCommand_up btns wnd ref = do
 
 update_button p True = do
 	set p [bgcolor := green]
-	update_button p False = do
+
+update_button p False = do
 	return() 
 
 
@@ -64,8 +65,8 @@ setField wnd k ref = do
 	let plr = player st
 	let brd' = nextStep brd plr k
 	updateBtns btns (fieldFromIO brd')
-	setCommand_up btns wnd ref
 	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
+	setCommand_up btns wnd ref
 	return()
 
 updateBtns :: [Button ()] -> Field -> IO ()
