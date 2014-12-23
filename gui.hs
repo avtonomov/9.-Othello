@@ -43,16 +43,29 @@ main :: IO ()
 main
   = start hello
 
+
+new_game ref = do
+	st <- readIORef ref
+	let btns = buttons st
+	brd' <- generateGameIO
+	updateBtns btns brd'
+	writeIORef ref (GameState brd' btns White)
+
 hello :: IO ()
 hello = do
 	let wndTitle = "Game"
 	wnd <- frame [ text := wndTitle, bgcolor := grey ]
 	let say desc = infoDialog wnd wndTitle desc
 		
-	let brd = startGame
+    let brd = startGame
 	btns <- sequence $ getBtns' wnd (fieldFromIO brd) 0 []
 	let st = GameState brd btns White
 	ref <- newIORef st
+
+    top_Menu <- menuPane [text := "Игра"]
+    menuItem top_Menu [on command := new_game ref, text := "Новая игра"]
+    menuQuit top_Menu [on command := wxcAppExit, text := "Выход"]
+
 	setCommand btns wnd ref
 	placeBtns wnd btns
 	setCommand_up btns wnd ref
