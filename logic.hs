@@ -59,24 +59,25 @@ intToPair k
 nextStep :: IO Field -> State -> Int -> IO Field
 nextStep field state k = fieldToIO $ moving (fieldFromIO field) state $ intToPair k
 
+cmpField :: Field -> Field -> Bool
+cmpField [] [] = True
+cmpField (x:f1) (y:f2)
+	| x == y = cmpField f1 f2
+	| otherwise = False
 
-{-
-writeGameToFileIO :: Field -> FilePath -> IO ()
-writeGameToFileIO arr filename = writeFile filename $ unwords $ map show $ arr
+isMoved :: IO Field -> State -> Int -> Bool
+isMoved field state k
+	| cmpField (fieldFromIO field) (fieldFromIO $ nextStep field state k) = False
+	| otherwise = True
 
-readGameFromFileIO :: FilePath -> IO Field
-readGameFromFileIO filename = do
-	elems <- readFromFileIO filename
-	return elems
-	
-readFromFileIO :: FilePath -> IO [State]
-readFromFileIO filename = do
-	content <- readFile filename
-	let elems = concatMap words $ lines content
-	return $ map toState elems :: IO [State]
-	
-toState :: String -> State
-toState "Black" = Black
-toState "White" = White
-toState "Empty" = Empty
--}
+isEndGame :: IO Field -> Bool
+isEndGame field = (isEnd (fieldFromIO field) White 0) && (isEnd (fieldFromIO field) Black 0)
+	where
+		isEnd field state k
+			| k == count*count - 1 = True
+			| otherwise = if (length (checkPosition field state (intToPair k)) > 0) then False else isEnd field state (k+1)
+			
+winner :: IO Field -> State
+winner field 
+	| isEndGame field == True = if (countBlack (fieldFromIO field) > countWhite (fieldFromIO field)) then Black else White
+	| otherwise = Empty
