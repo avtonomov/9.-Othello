@@ -83,7 +83,7 @@ setField wnd k ref = do
 	let brd = board st
 	let plr = player st
 	let brd' = nextStep brd plr k
-	end_game brd say
+	end_game brd' say
 	updateBtns btns (fieldFromIO brd')
 	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
 	setCommand_up btns ref
@@ -93,7 +93,7 @@ end_game brd say
 	|isEndGame brd ==True && winner brd == Black = say "Black power" 
 	|isEndGame brd ==True && winner brd == White = say "White power" 
 	|isEndGame brd ==True && winner brd == Empty = say "Nothing power" 
-	|otherwise =  say "Black power"
+	|otherwise =  return()
 
 updateBtns :: [Button ()] -> Field -> IO ()
 updateBtns btns brd = do
