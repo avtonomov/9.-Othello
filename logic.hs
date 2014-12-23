@@ -101,5 +101,6 @@ isEndGame field = (isEnd (fieldFromIO field) White 0) && (isEnd (fieldFromIO fie
 
 winner :: IO Field -> State
 winner field 
-	| isEndGame field == True = if (countBlack (fieldFromIO field) > countWhite (fieldFromIO field)) then Black else White
-	| otherwise = Empty	
+	| countBlack (fieldFromIO field) > countWhite (fieldFromIO field) = Black
+	| countBlack (fieldFromIO field) < countWhite (fieldFromIO field) = White
+	| otherwise = Empty

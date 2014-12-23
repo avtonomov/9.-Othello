@@ -32,6 +32,14 @@ setCommand_up btns ref = do
 	let z = zip [1..64] btns
 	forM_ z $ \p -> update_button (snd p) (isMoved brd plr (fst p))
 
+
+can_move btns ref = do
+	st <- readIORef ref
+	let brd = board st
+	let plr = player st
+	let z = zip [1..64] btns
+	forM_ z $ \p -> update_button (snd p) (isMoved brd plr (fst p))
+	
 update_button p True = do
 	set p [bgcolor := green]
 
