@@ -33,13 +33,17 @@ setCommand_up btns ref = do
 	forM_ z $ \p -> update_button (snd p) (isMoved brd plr (fst p))
 
 
-can_move btns ref = do
+can_move btns ref xs= do
 	st <- readIORef ref
 	let brd = board st
 	let plr = player st
 	let z = zip [1..64] btns
-	forM_ z $ \p -> update_button (snd p) (isMoved brd plr (fst p))
-	
+	forM_ z $ \p -> if isMoved brd plr (fst p) then (1:xs)
+	check (xs)
+
+
+check xs = if (length (xs)==0) then True else False
+
 update_button p True = do
 	set p [bgcolor := green]
 
@@ -91,16 +95,16 @@ setField wnd k ref = do
 	let brd = board st
 	let plr = player st
 	let brd' = nextStep brd plr k
-	end_game brd' say
+	end_game btns say ref
 	updateBtns btns (fieldFromIO brd')
 	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
 	setCommand_up btns ref
 	return()
 
-end_game brd say
-	|isEndGame brd ==True && winner brd == Black = say "Black power" 
-	|isEndGame brd ==True && winner brd == White = say "White power" 
-	|isEndGame brd ==True && winner brd == Empty = say "Nothing power" 
+end_game btns say ref
+	|(can_move btns ref) ==True && winner brd == Black = say "Black power" 
+	|(can_move btns ref) ==True && winner brd == White = say "White power" 
+	|(can_move btns ref) ==True && winner brd == Empty = say "Nothing power" 
 	|otherwise =  return()
 
 updateBtns :: [Button ()] -> Field -> IO ()
