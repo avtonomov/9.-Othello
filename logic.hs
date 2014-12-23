@@ -84,10 +84,10 @@ toState "Empty" = Empty
 cmpField :: Field -> Field -> Bool
 cmpField [] [] = True
 cmpField (x:f1) (y:f2)
-| x == y = cmpField f1 f2
-| otherwise = False
+	| x == y = cmpField f1 f2
+	| otherwise = False
 
 isMoved :: IO Field -> State -> Int -> Bool
 isMoved field state k
-| cmpField (fieldFromIO field) (fieldFromIO $ nextStep field state k) = False
-| otherwise = True
+	| cmpField (fieldFromIO field) (fieldFromIO $ nextStep field state k) = False
+	| otherwise = True
