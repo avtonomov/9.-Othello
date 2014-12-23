@@ -47,8 +47,8 @@ main
 new_game ref = do
 	st <- readIORef ref
 	let btns = buttons st
-	let brd` = startGame
-	updateBtns btns brd'
+	let brd' = startGame
+	updateBtns btns fieldFromIO brd')
 	writeIORef ref (GameState brd' btns White)
 
 hello :: IO ()
