@@ -32,9 +32,9 @@ setCommand_up btns wnd ref = do
 	let z = zip [1..64] btns
 	forM_ z $ \p -> set (snd p) [bgcolor := check_move brd (fst p) plr]
 
-check_move brd k plr = 
-	|isMoved brd plr k ==True = green
-	|otherwise = getColor plr 
+check_move brd k plr 
+	| isMoved brd plr k == True = green
+	| otherwise = getColor plr 
 
 main :: IO ()
 main
