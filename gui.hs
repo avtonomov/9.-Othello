@@ -56,8 +56,7 @@ hello = do
 	let wndTitle = "Game"
 	wnd <- frame [ text := wndTitle, bgcolor := grey ]
 	let say desc = infoDialog wnd wndTitle desc
-		
-    let brd = startGame
+	let brd = startGame
 	btns <- sequence $ getBtns' wnd (fieldFromIO brd) 0 []
 	let st = GameState brd btns White
 	ref <- newIORef st
