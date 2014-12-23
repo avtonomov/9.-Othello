@@ -92,8 +92,9 @@ isMoved field state k
 	| cmpField (fieldFromIO field) (fieldFromIO $ nextStep field state k) = False
 	| otherwise = True
 
+	
 isEndGame :: IO Field -> Bool
-isEndGame field = (isEnd field White 1)
+isEndGame field = (isEnd field White 1) && (isEnd field Black 1)
 	where
 		isEnd field state k
 			| k < count*count = if (isMoved field state k == False) then isEnd field state (k+1) else False
