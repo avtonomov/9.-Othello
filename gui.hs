@@ -39,7 +39,7 @@ can_move btns ref xs= do
 	let plr = player st
 	let z = zip [1..64] btns
 	forM_ z $ \p -> if isMoved brd plr (fst p) then (1:xs)
-	check (xs)
+	return check (xs)
 
 
 check xs = if (length (xs)==0) then True else False
@@ -102,9 +102,9 @@ setField wnd k ref = do
 	return()
 
 end_game btns say ref
-	|(can_move btns ref) ==True && winner brd == Black = say "Black power" 
-	|(can_move btns ref) ==True && winner brd == White = say "White power" 
-	|(can_move btns ref) ==True && winner brd == Empty = say "Nothing power" 
+	|(can_move btns ref []) ==True && winner brd == Black = say "Black power" 
+	|(can_move btns ref []) ==True && winner brd == White = say "White power" 
+	|(can_move btns ref []) ==True && winner brd == Empty = say "Nothing power" 
 	|otherwise =  return()
 
 updateBtns :: [Button ()] -> Field -> IO ()
