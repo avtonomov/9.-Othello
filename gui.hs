@@ -52,7 +52,7 @@ setField wnd k ref = do
 	let plr = player st
 	let brd' = nextStep brd plr k
 	updateBtns btns (fieldFromIO brd')
-	writeIORef ref (GameState brd' btns (toglePlayer plr))
+	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
 	return()
 
 updateBtns :: [Button ()] -> Field -> IO ()
