@@ -32,7 +32,7 @@ setCommand_up btns wnd ref = do
 	let z = zip [1..64] btns
 	forM_ z $ \p -> set (snd p) [bgcolor := check_move brd (fst p) plr]
 
-check_move brd k plr = 
+check_move brd k plr 
 	|isMoved brd plr k ==True = green
 	|otherwise = getColor plr 
 
@@ -52,7 +52,7 @@ hello = do
 	ref <- newIORef st
 	setCommand btns wnd ref
 	placeBtns wnd btns
-	
+	setCommand_up btns wnd ref
 	return()
 	
 setField wnd k ref = do
@@ -62,6 +62,7 @@ setField wnd k ref = do
 	let plr = player st
 	let brd' = nextStep brd plr k
 	updateBtns btns (fieldFromIO brd')
+	setCommand_up btns wnd ref
 	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
 	return()
 
