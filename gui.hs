@@ -16,14 +16,14 @@ fPath = "save.txt"
 
 
 getBtns' wnd [] i btns = btns
-getBtns' wnd (x:brd) i btns = getBtns' wnd brd (i + 1) (button wnd [text := (show i), clientSize := sz 1 1, bgcolor := getColor (x)]:btns)
+getBtns' wnd (x:brd) i btns = getBtns' wnd brd (i + 1) (button wnd [text := (show i), clientSize := (sz 1 1), bgcolor := getColor (x)]:btns)
 
 placeBtns :: (Form f, Widget w) => f -> [w] -> IO ()
-placeBtns wnd btns = set wnd [layout := minsize (sz 500 500) $column 8 $ map (\x -> margin 3 $ row 8 (map widget x)) (chunksOf 8 btns)]
+placeBtns wnd btns = set wnd [layout := minsize (sz 200 200) $column 8 $ map (\x -> margin 3 $ row 8 (map widget x)) (chunksOf 8 btns)]
 
 setCommand btns wnd ref = do
 	let z = zip [1..64] btns
-	forM_ z $ \p -> set (snd p) [on command := setField wnd (fst p) ref]
+	forM_ z $ \p -> set (snd p) [on command := setField wnd (fst p) ref, clientSize := (sz 40 40)]
 
 setCommand_up btns ref = do
 	st <- readIORef ref
