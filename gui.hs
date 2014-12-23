@@ -61,9 +61,9 @@ hello = do
 	let st = GameState brd btns White
 	ref <- newIORef st
 
-    top_Menu <- menuPane [text := "Игра"]
-    menuItem top_Menu [on command := new_game ref, text := "Новая игра"]
-    menuQuit top_Menu [on command := wxcAppExit, text := "Выход"]
+	top_Menu <- menuPane [text := "Игра"]
+	menuItem top_Menu [on command := new_game ref, text := "Новая игра"]
+	menuQuit top_Menu [on command := wxcAppExit, text := "Выход"]
 
 	setCommand btns wnd ref
 	placeBtns wnd btns
