@@ -96,7 +96,7 @@ isEndGame :: IO Field -> Bool
 isEndGame field = (isEnd (fieldFromIO field) White 0) && (isEnd (fieldFromIO field) Black 0)
 	where
 		isEnd field state k
-			| k == count * count = True
+			| k == count * count -1 = True
 			| state /= Empty = if (length (checkPosition field state (intToPair k)) > 0) then False else isEnd field state (k+1)
 
 winner :: IO Field -> State
