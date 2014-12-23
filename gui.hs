@@ -16,7 +16,7 @@ fPath = "save.txt"
 
 
 getBtns' wnd [] i btns = btns
-getBtns' wnd (x:brd) i btns = getBtns' wnd brd (i + 1) (button wnd [text := (show i), clientSize := sz 1 1, bgcolor := getColor (toInt x)]:btns)
+getBtns' wnd (x:brd) i btns = getBtns' wnd brd (i + 1) (button wnd [text := (show i), clientSize := sz 1 1, bgcolor := getColor (x)]:btns)
 
 placeBtns :: (Form f, Widget w) => f -> [w] -> IO ()
 placeBtns wnd btns = set wnd [layout := minsize (sz 500 500) $column 8 $ map (\x -> margin 3 $ row 8 (map widget x)) (chunksOf 8 btns)]
@@ -25,6 +25,16 @@ setCommand btns wnd ref = do
 	let z = zip [1..64] btns
 	forM_ z $ \p -> set (snd p) [on command := setField wnd (fst p) ref]
 
+setCommand_up btns wnd ref = do
+	st <- readIORef ref
+	let brd = board st
+	let plr = player st
+	let z = zip [1..64] btns
+	forM_ z $ \p -> set (snd p) [bgcolor := check_move brd (fst p) plr]
+
+check_move brd k plr = 
+	|isMoved brd plr k ==True = green
+	|otherwise = getColor plr 
 
 main :: IO ()
 main
@@ -58,7 +68,7 @@ setField wnd k ref = do
 updateBtns :: [Button ()] -> Field -> IO ()
 updateBtns btns brd = do
 	let z = zip brd btns
-	forM_ z $ \p -> set (snd p) [ bgcolor := getColor (toInt (fst p))]
+	forM_ z $ \p -> set (snd p) [ bgcolor := getColor (fst p)]
 	
 data GameState = GameState {
 	board :: IO Field,
@@ -67,9 +77,9 @@ data GameState = GameState {
 }
 
 	
-getColor 1 = red
-getColor 0 = white
-getColor 2 = blue
+getColor White = red
+getColor Empty = white
+getColor Black = blue
 
 btnLabel :: State -> String
 btnLabel Black = "Black"
