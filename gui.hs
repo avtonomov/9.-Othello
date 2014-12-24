@@ -86,21 +86,36 @@ setField wnd k ref = do
 	let brd = board st
 	let plr = player st
 	let brd' = nextStep brd plr k
-	end_game plr 0 brd' say (fieldFromIO brd')
 	updateBtns btns (fieldFromIO brd')
 	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
 	setCommand_up btns ref
+	end_game plr 1 brd say (fieldFromIO brd)
+	fakeSetField wnd k ref
 	return()
 
+fakeSetField wnd k ref = do
+	let wndTitle = "Game"
+	let say desc = infoDialog wnd wndTitle desc
+	st <- readIORef ref
+	let btns = buttons st
+	let brd = board st
+	let plr = player st
+	let brd' = nextStep brd plr k
+	updateBtns btns (fieldFromIO brd')
+	writeIORef ref (GameState brd' btns (toglePlayer plr $ isMoved brd plr k))
+	setCommand_up btns ref
+	end_game plr 1 brd say (fieldFromIO brd)
+	return()
+	
 end_game plr k brd say xs
-	|isEndGameByJamik plr k brd xs==True && winner brd == Black = say "Black power" 
-	|isEndGameByJamik plr k brd xs==True && winner brd == White = say "White power" 
-	|isEndGameByJamik plr k brd xs==True && winner brd == Empty = say "Nothing power" 
+	|isEndGameByJamik plr k brd xs==False && winner brd == Black = say "Black power" 
+	|isEndGameByJamik plr k brd xs==False && winner brd == White = say "White power" 
+	|isEndGameByJamik plr k brd xs==False && winner brd == Empty = say "Nothing power" 
 	|otherwise =  return()
 
 isEndGameByJamik plr k brd [] = False
 isEndGameByJamik plr k brd (st:state) 
-	| isMoved brd plr (k + 1) == True = True
+	| isMoved brd plr k == True = True
 	| otherwise = isEndGameByJamik plr (k + 1) brd state	
 
 updateBtns :: [Button ()] -> Field -> IO ()
