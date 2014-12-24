@@ -16,7 +16,7 @@ fPath = "save.txt"
 
 
 getBtns' wnd [] i btns = btns
-getBtns' wnd (x:brd) i btns = getBtns' wnd brd (i + 1) (button wnd [text := (show i), clientSize := sz 1 1, bgcolor := getColor (x)]:btns)
+getBtns' wnd (x:brd) i btns = getBtns' wnd brd (i + 1) (button wnd [text := " ", clientSize := sz 1 1, bgcolor := getColor (x)]:btns)
 
 placeBtns :: (Form f, Widget w) => f -> [w] -> IO ()
 placeBtns wnd btns = set wnd [layout := minsize (sz 500 500) $column 8 $ map (\x -> margin 3 $ row 8 (map widget x)) (chunksOf 8 btns)]
@@ -108,8 +108,8 @@ fakeSetField wnd k ref = do
 	return()
 	
 end_game plr k brd say xs
-	|isEndGameByJamik plr k brd xs==False && winner brd == Black = say "Black power" 
-	|isEndGameByJamik plr k brd xs==False && winner brd == White = say "White power" 
+	|isEndGameByJamik plr k brd xs==False && winner brd == Black = say "Blue Win!" 
+	|isEndGameByJamik plr k brd xs==False && winner brd == White = say "Red Win!" 
 	|isEndGameByJamik plr k brd xs==False && winner brd == Empty = say "Nothing power" 
 	|otherwise =  return()
 
